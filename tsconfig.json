@@ -1,5 +1,21 @@
 {
   "extends": "@react-native/typescript-config",
-  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowUmdGlobalAccess": true
+  },
+  "include": [
+    "./src/**/*",
+    "./src/@types/**/*",
+    "index.d.ts",
+    ".eslintrc.js",
+    "jest.setup.js",
+    "jest.config.js",
+    "babel.config.js",
+    "index.js"
+  ],
   "exclude": ["**/node_modules", "**/Pods"]
 }
