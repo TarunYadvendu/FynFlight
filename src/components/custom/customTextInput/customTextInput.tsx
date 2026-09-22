@@ -81,22 +81,22 @@ const CustomTextInput = forwardRef<RNTextInput, Props>(
             },
           }}
         />
+        {prefixIcon && (
+          <Tap onPress={prefixIcon.tap} containerStyle={styles.prefixIcon}>
+            <CustomImage
+              source={prefixIcon.source}
+              color={prefixIcon.color ?? theme.colors.onSurface}
+              style={styles.prefixIconImage}
+            />
+          </Tap>
+        )}
+
         {suffixIcon && (
           <Tap onPress={suffixIcon.tap} containerStyle={styles.suffixIcon}>
             <CustomImage
               source={suffixIcon.source}
               color={suffixIcon.color ?? theme.colors.onSurface}
               style={styles.suffixIconImage}
-            />
-          </Tap>
-        )}
-
-        {prefixIcon && (
-          <Tap onPress={prefixIcon.tap} style={styles.prefixIcon}>
-            <CustomImage
-              source={prefixIcon.source}
-              color={prefixIcon.color ?? theme.colors.onSurface}
-              style={styles.prefixIconImage}
             />
           </Tap>
         )}

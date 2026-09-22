@@ -1,13 +1,21 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  createDrawerScreen,
+} from '@react-navigation/drawer';
+import { createStaticNavigation } from '@react-navigation/native';
 import { AppDrawer } from './appDrawer';
-import { DrawerStackParamList } from './types';
+import RootStack from './routes';
 
-const Drawer = createDrawerNavigator<DrawerStackParamList>();
+const MyDrawer = createDrawerNavigator({
+  drawerContent: () => <AppDrawer />,
+  screens: {
+    Home: createDrawerScreen({
+      screen: RootStack,
+      options: {
+        headerShown: false,
+      },
+    }),
+  },
+});
 
-function MyDrawer() {
-  const appDrawerContent = (props: any) => {
-    return <AppDrawer {...props} />;
-  };
-
-  return <AppDrawer />;
-}
+export const DrawerRoute = createStaticNavigation(MyDrawer);

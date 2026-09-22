@@ -5,7 +5,6 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
-  View,
   ViewStyle,
 } from 'react-native';
 import { ImageType } from '../customImage/customImage';
@@ -84,7 +83,7 @@ function CustomSegmentedButton({
   };
 
   return (
-    <View style={[styles.buttonContainer, props.style]}>
+    <Shadow inset style={[styles.buttonContainer, props.style]}>
       {props.items?.map((item, index) => (
         <Tap
           key={`segmented${item.value}`}
@@ -107,7 +106,7 @@ function CustomSegmentedButton({
           )}
         </Tap>
       ))}
-    </View>
+    </Shadow>
   );
 }
 
@@ -117,10 +116,9 @@ const makeStyles = (theme: CustomTheme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginVertical: 10,
-      backgroundColor: theme.dark
-        ? theme.colors.secondaryContainer
-        : theme.colors.border,
       borderRadius: theme.roundness,
+      backgroundColor: theme.colors.background,
+      padding: 2,
     },
     tapArea: {
       flex: 1,

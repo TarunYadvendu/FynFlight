@@ -1,4 +1,8 @@
-import { CustomFlatlist, CustomSegmentedButton } from '@/components/custom';
+import {
+  CustomFlatlist,
+  CustomSegmentedButton,
+  CustomText,
+} from '@/components/custom';
 import { SegmentedButtonItem } from '@/components/custom/customSegmentedButton/customSegmentedButton';
 import { TextVariants } from '@/components/custom/customText/customText';
 import { Header, SafeScreen } from '@/components/templates';
@@ -61,7 +65,7 @@ export const Dashboard = () => {
       // OS filter
       const matchesOS =
         !selectedOS ||
-        selectedOS.value === 'ALL' ||
+        selectedOS.value === 'all' ||
         (selectedOS.value === 'ios' && app.isIos) ||
         (selectedOS.value === 'android' && !app.isIos);
 
@@ -117,8 +121,8 @@ export const Dashboard = () => {
           <CustomSegmentedButton
             items={[
               {
-                label: 'all',
-                value: 'ALL',
+                label: 'All',
+                value: 'all',
               },
               {
                 label: 'iOS',
@@ -138,6 +142,15 @@ export const Dashboard = () => {
             data={filteredApps ?? []}
             contentContainerStyle={styles.flatlistContainer}
             keyExtractor={item => item.id}
+            ListEmptyComponent={
+              !isLoading ? (
+                <View style={styles.emptyView}>
+                  <CustomText>{'No Data Available'}</CustomText>
+                </View>
+              ) : (
+                <></>
+              )
+            }
             renderItem={({ item }) => (
               <BuildCard
                 cardItem={item}
@@ -169,7 +182,12 @@ const makeStyles = (theme: CustomTheme, topInset: number) =>
     },
     segmentedBtn: {
       marginHorizontal: 16,
-      backgroundColor: theme.colors.border,
+      backgroundColor: theme.colors.primaryContainer,
+    },
+    emptyView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

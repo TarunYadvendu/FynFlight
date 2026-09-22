@@ -33,6 +33,9 @@ const themeDestructure = () => {
   let darkInsetShadow =
     'inset 0 1px 3px 0 #FFFFFF1A, inset 0 1px 2px -1px #FFFFFF14';
 
+  let iosColor = '#3C434C';
+  let androidColor = '#00904C';
+
   //for fonts
   const fonts = {
     ...configureFonts({ config: _fontConfig }),
@@ -108,6 +111,8 @@ const themeDestructure = () => {
 
       background: '#F5F5F5',
       onDark: '#F5F5F5',
+      iosBg: iosColor,
+      androidBg: androidColor,
     },
   };
 
@@ -164,6 +169,8 @@ const themeDestructure = () => {
 
       background: '#333333',
       onDark: '#F5F5F5',
+      iosBg: iosColor,
+      androidBg: androidColor,
     },
   };
 
@@ -230,6 +237,9 @@ export interface CustomTheme extends MD3Theme {
       outOfOfcLevel2: string;
 
       onDark: string;
+
+      iosBg: string;
+      androidBg: string;
     };
   fonts: MD3Typescale & {
     regular: FontStyle;

@@ -99,13 +99,21 @@ const Header = ({ ...props }: HeaderProps) => {
               navigation.dispatch(DrawerActions.openDrawer());
             }}
           >
-            <CustomImage source={Images.drawer} style={styles.drawer} />
+            <CustomImage
+              color={theme.colors.onSurface}
+              source={Images.drawer}
+              style={styles.drawer}
+            />
           </Tap>
 
           <CustomText>{props.title}</CustomText>
 
           <Tap onPress={toggleToolbar}>
-            <CustomImage source={Images.search} style={styles.drawer} />
+            <CustomImage
+              color={theme.colors.onSurface}
+              source={Images.search}
+              style={styles.drawer}
+            />
           </Tap>
         </Animated.View>
 
@@ -117,6 +125,10 @@ const Header = ({ ...props }: HeaderProps) => {
             value={props.search}
             suffixIcon={{
               source: Images.close,
+              tap: toggleToolbar,
+            }}
+            prefixIcon={{
+              source: Images.back,
               tap: toggleToolbar,
             }}
           />

@@ -1,17 +1,11 @@
 import { Divider } from '@/components/common';
-import {
-  ChipModeEnum,
-  CustomAvatar,
-  CustomChip,
-  CustomImage,
-  CustomText,
-  Shadow,
-  Tap,
-} from '@/components/custom';
+import { CustomImage, CustomText, Shadow, Tap } from '@/components/custom';
+import { ImageType } from '@/components/custom/customImage/customImage';
 import { TextVariants } from '@/components/custom/customText/customText';
 import { MobileAppsModel } from '@/services/models';
 import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
+import { assignedNameExtracter, ticketNumberExtracter } from '@/utils/utils';
 import { Linking, StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -37,18 +31,59 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
     }
   };
 
+  /** ticket number */
+  const extractedTickets = ticketNumberExtracter(cardItem.ticketNumber);
+
+  /** assigned contacts */
+  const assignedUsers = assignedNameExtracter(cardItem.assignTo);
+
   return (
     <Shadow style={styles.container}>
       <View style={styles.header}>
-        <CustomAvatar size={60} style={styles.avatar} name={cardItem.appName} />
+        <View
+          style={[
+            styles.logoContainer,
+            {
+              backgroundColor: cardItem.isIos
+                ? theme.colors.iosBg
+                : theme.colors.androidBg,
+            },
+          ]}
+        >
+          <CustomImage
+            color={theme.colors.onDark}
+            source={cardItem.isIos ? Images.ios : Images.android}
+            style={styles.avatar}
+            type={ImageType.svg}
+          />
+        </View>
+
         <View style={styles.titleView}>
           <CustomText style={styles.appName} maxLines={1}>
             {cardItem.appName}
           </CustomText>
-          <CustomChip
-            mode={ChipModeEnum.Flat}
-            label={cardItem.isIos ? 'iOS' : 'Android'}
-          />
+          <View style={styles.ticketContainer}>
+            {cardItem.assignTo ? (
+              assignedUsers.map((item, index) => {
+                return (
+                  <CustomText
+                    key={index}
+                    color={theme.colors.labelLight}
+                    style={{
+                      // textDecorationStyle: 'dashed',
+                      textDecorationLine: 'underline',
+                    }}
+                  >
+                    {`${item}${assignedUsers.length - 1 !== index ? ',' : ''}`}
+                  </CustomText>
+                );
+              })
+            ) : (
+              <CustomText color={theme.colors.labelLight}>
+                {'No Contact Assigned'}
+              </CustomText>
+            )}
+          </View>
         </View>
       </View>
 
@@ -70,17 +105,28 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
 
       <View style={styles.footer}>
         <View style={styles.footerInfo}>
-          <CustomText
-          // variant={TextVariants.titleSmall}
-          >
-            {cardItem.ticketNumber || '-'}
-          </CustomText>
-          <CustomText
-            variant={TextVariants.titleSmall}
-            color={theme.colors.labelLight}
-          >
-            {cardItem.assignTo || '-'}
-          </CustomText>
+          {cardItem.ticketNumber ? (
+            <View style={styles.ticketContainer}>
+              {extractedTickets.map(item => {
+                return (
+                  <Tap
+                    onClick={() => {
+                      Linking.openURL(item.link);
+                    }}
+                    containerStyle={styles.ticketTap}
+                    style={styles.ticketChipContainer}
+                  >
+                    <CustomImage source={Images.link} style={styles.link} />
+                    <CustomText variant={TextVariants.bodySmall}>
+                      {item.text}
+                    </CustomText>
+                  </Tap>
+                );
+              })}
+            </View>
+          ) : (
+            <CustomText>{'-'}</CustomText>
+          )}
         </View>
 
         <Tap
@@ -119,7 +165,8 @@ const makeStyle = (theme: CustomTheme) =>
       flex: 1,
     },
     avatar: {
-      flexShrink: 0,
+      height: 30,
+      width: 30,
     },
     container: {
       marginHorizontal: 20,
@@ -135,14 +182,21 @@ const makeStyle = (theme: CustomTheme) =>
       gap: 15,
       flex: 1,
     },
+    logoContainer: {
+      width: 60,
+      height: 60,
+      borderRadius: theme.extraRoundness,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     titleView: {
       flex: 1,
       minWidth: 0,
       gap: 3,
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
     },
     appName: {
-      marginLeft: 3,
+      // marginLeft: 3,
     },
     contentContainer: {
       flex: 1,
@@ -157,18 +211,41 @@ const makeStyle = (theme: CustomTheme) =>
     footer: {
       flex: 1,
       marginVertical: 15,
-      marginHorizontal: 10,
+      marginHorizontal: 5,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      // alignItems: 'flex-end',
     },
     footerInfo: {
-      justifyContent: 'space-between',
+      flex: 1,
+    },
+    ticketContainer: {
+      flexWrap: 'wrap',
+      flexDirection: 'row',
+      gap: 6,
+    },
+    ticketTap: {
+      borderRadius: theme.roundness,
+      borderWidth: 0.5,
+      borderColor: theme.colors.border,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    ticketChipContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      gap: 4,
+    },
+    link: {
+      width: 10,
+      height: 10,
     },
     tapContainer: {
       paddingVertical: 10,
       paddingHorizontal: 15,
       borderRadius: theme.roundness,
+      alignSelf: 'flex-end',
     },
     tap: {
       flexDirection: 'row',

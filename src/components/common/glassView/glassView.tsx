@@ -55,8 +55,8 @@ const makeStyle = (theme: CustomTheme, bordered?: boolean) =>
     customGlass: {
       borderWidth: 0.6,
       backgroundColor: bordered
-        ? `${theme.colors.outline}1d`
-        : `${theme.colors.outline}3d`,
+        ? `${theme.colors.primaryContainer}1d`
+        : `${theme.colors.primaryContainer}3d`,
       borderColor: `${theme.colors.border}4d`,
     },
   });
