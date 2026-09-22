@@ -1,1 +1,2 @@
+export { default as Header } from './header/header';
 export { default as SafeScreen } from './safeScreen/safeScreen';

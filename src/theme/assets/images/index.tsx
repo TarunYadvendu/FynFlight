@@ -163,4 +163,5 @@ export const Images = {
   aboutUs: require('../images/images/aboutUs.svg'),
   mousePointer: require('../images/images/mousePointer.svg'),
   flagIndia: require('../images/images/flagIndia.png'),
+  install: require('../images/images/install.svg'),
 };

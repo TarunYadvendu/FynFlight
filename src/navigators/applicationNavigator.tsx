@@ -1,5 +1,6 @@
 import { useTheme } from '@/theme/themeProvider/paperTheme';
 import { NavigationContainer } from '@react-navigation/native';
+import FlashMessage from 'react-native-flash-message';
 import { PaperProvider } from 'react-native-paper';
 import RootStack from './routes';
 
@@ -10,8 +11,9 @@ export const ApplicationNavigator = () => {
 
   return (
     <PaperProvider theme={appTheme}>
-      <NavigationContainer>
+      <NavigationContainer theme={appTheme}>
         <RootStack />
+        <FlashMessage position="bottom" style={{ marginBottom: 64 }} />
       </NavigationContainer>
     </PaperProvider>
   );

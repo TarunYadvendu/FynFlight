@@ -1,121 +1,175 @@
-import { CustomImage } from '@/components/custom';
-import { ResizeModeType } from '@/components/custom/customImage/customImage';
-import { Images } from '@/theme/assets/images';
+import { CustomFlatlist, CustomSegmentedButton } from '@/components/custom';
+import { SegmentedButtonItem } from '@/components/custom/customSegmentedButton/customSegmentedButton';
+import { TextVariants } from '@/components/custom/customText/customText';
+import { Header, SafeScreen } from '@/components/templates';
+import { ApiConstants } from '@/services/apiConstants';
+import { HttpMethodApi, makeRequest } from '@/services/apiInstance';
+import { MobileAppsModel } from '@/services/models';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
-import { useAppNavigation } from '@/utils/navigation/navigationUtils';
-import { Dimensions, ScrollView, StyleSheet, Text } from 'react-native';
-
-const { height } = Dimensions.get('window');
+import { showSnackbar } from '@/utils/utils';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BuildCard } from './buildCard';
 
 export const Dashboard = () => {
   /** Added by @Yuvraj 21-06-2026 -> to access app theme(colors, roundness, fonts, etc) */
   const theme = useTheme();
 
-  /** Added by @Yuvraj 21-06-2026 -> access StylesSheet with theme implemented */
-  const styles = makeStyles(theme);
+  /** Added by @Yuvraj 21-09-2026 -> status bar height, the navbar sits below it */
+  const insets = useSafeAreaInsets();
 
-  //redirect to dashboard
-  const navigation = useAppNavigation();
+  /** Added by @Yuvraj 21-06-2026 -> access StylesSheet with theme implemented */
+  const styles = makeStyles(theme, insets.top);
+
+  /** search  */
+  const [search, setSearch] = useState('');
+
+  const queryClient = useQueryClient();
+
+  /** regen loading */
+  const [regenLoading, setRegenLoading] = useState<string>();
+
+  const regenarateLink = (id: string) => {
+    RegenMobileAppsApi.mutate({ id: id });
+  };
+
+  /** segment biutton */
+  const [selectedOS, setSelectedOS] = useState<SegmentedButtonItem>();
+
+  /** calling the api to get the apps */
+  const { data, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['mobileAppBuils'],
+    queryFn: async () => {
+      return await makeRequest<MobileAppsModel[]>({
+        endpoint: ApiConstants.MobileApps,
+        method: HttpMethodApi.Get,
+      });
+    },
+  });
+
+  const handleSegmentButton = (value: SegmentedButtonItem) => {
+    setSelectedOS(value);
+  };
+
+  /** search finder */
+  const filteredApps = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return (data ?? []).filter(app => {
+      // OS filter
+      const matchesOS =
+        !selectedOS ||
+        selectedOS.value === 'ALL' ||
+        (selectedOS.value === 'ios' && app.isIos) ||
+        (selectedOS.value === 'android' && !app.isIos);
+
+      // Search filter
+      const matchesSearch =
+        !query ||
+        [app.appName, app.ticketNumber, app.assignTo, app.note].some(value =>
+          value?.toLowerCase().includes(query),
+        );
+
+      return matchesOS && matchesSearch;
+    });
+  }, [data, search, selectedOS]);
+
+  /** regenrating the link */
+  const RegenMobileAppsApi = useMutation({
+    mutationFn: (payload: { id: string }) =>
+      makeRequest<MobileAppsModel>({
+        endpoint: ApiConstants.MobileApps,
+        method: HttpMethodApi.Patch,
+        params: payload,
+      }),
+    onMutate(variables) {
+      setRegenLoading(variables.id);
+    },
+    onSettled() {
+      setRegenLoading(undefined);
+    },
+    onSuccess(data, variables) {
+      //can i update the data here so not each item will re render and the user will be there only where they were?
+      queryClient.setQueryData<MobileAppsModel[]>(
+        ['mobileAppBuils'],
+        currentData => {
+          if (!currentData) return currentData;
+
+          return currentData.map(item =>
+            item.id === variables.id ? data : item,
+          );
+        },
+      );
+    },
+    onError(error, variables, context) {
+      showSnackbar(error.message, 'danger');
+    },
+  });
 
   return (
-    <ScrollView style={styles.flex}>
-      <CustomImage
-        source={Images.appBanner}
-        style={styles.image}
-        resizeMode={ResizeModeType.cover}
-      />
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-      <Text>{'there is something'}</Text>
-    </ScrollView>
+    <SafeScreen>
+      <View style={styles.container}>
+        <Header title={'App Builds'} search={search} setSearch={setSearch} />
+
+        <View style={styles.flex}>
+          <CustomSegmentedButton
+            items={[
+              {
+                label: 'all',
+                value: 'ALL',
+              },
+              {
+                label: 'iOS',
+                value: 'ios',
+              },
+              {
+                label: 'Android',
+                value: 'android',
+              },
+            ]}
+            selected={selectedOS}
+            setSelected={handleSegmentButton}
+            style={styles.segmentedBtn}
+            textVariant={TextVariants.labelLarge}
+          />
+          <CustomFlatlist
+            data={filteredApps ?? []}
+            contentContainerStyle={styles.flatlistContainer}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <BuildCard
+                cardItem={item}
+                regenarate={regenarateLink}
+                regenLoading={regenLoading}
+              />
+            )}
+            refreshing={isFetching}
+            onRefresh={refetch}
+          />
+        </View>
+      </View>
+    </SafeScreen>
   );
 };
 
-const makeStyles = (theme: CustomTheme) =>
+const makeStyles = (theme: CustomTheme, topInset: number) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    flatlistContainer: {
+      paddingTop: 0,
+    },
     flex: {
       flex: 1,
+      paddingTop: 75,
     },
-    image: {
-      // position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      height: height / 2,
-      borderBottomLeftRadius: theme.roundness,
-      borderBottomRightRadius: 200,
+    segmentedBtn: {
+      marginHorizontal: 16,
+      backgroundColor: theme.colors.border,
     },
   });
 

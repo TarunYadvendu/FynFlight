@@ -25,8 +25,8 @@ function SafeScreen({ top = true, bottom = true, ...props }: Props) {
   return (
     <SafeAreaView style={[styles.container, props.style]} edges={edges}>
       <StatusBar
-      // barStyle={theme.dark ? 'light-content' : 'dark-content'}
-      // backgroundColor={theme.colors.surface}
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        // backgroundColor={theme.colors.surface}
       />
       {props.children}
     </SafeAreaView>

@@ -37,7 +37,9 @@ function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryProvider>
         <SafeAreaProvider>
-          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'light-content'}
+          />
           <ApplicationNavigator />
         </SafeAreaProvider>
       </QueryProvider>

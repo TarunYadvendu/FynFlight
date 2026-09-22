@@ -11,7 +11,13 @@ const RootStack = () => {
       initialRouteName="Splash"
     >
       <Stack.Screen name="Splash" component={Splash} />
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          animation: 'fade_from_bottom',
+        }}
+      />
     </Stack.Navigator>
   );
 };
