@@ -13,7 +13,7 @@ import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
 import { showSnackbar } from '@/utils/utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BuildCard } from './buildCard';
 
@@ -117,7 +117,7 @@ export const Dashboard = () => {
       <View style={styles.container}>
         <Header title={'App Builds'} search={search} setSearch={setSearch} />
 
-        <View style={styles.flex}>
+        <View style={styles.subContainer}>
           <CustomSegmentedButton
             items={[
               {
@@ -138,29 +138,35 @@ export const Dashboard = () => {
             style={styles.segmentedBtn}
             textVariant={TextVariants.labelLarge}
           />
-          <CustomFlatlist
-            data={filteredApps ?? []}
-            contentContainerStyle={styles.flatlistContainer}
-            keyExtractor={item => item.id}
-            ListEmptyComponent={
-              !isLoading ? (
-                <View style={styles.emptyView}>
-                  <CustomText>{'No Data Available'}</CustomText>
-                </View>
-              ) : (
-                <></>
-              )
-            }
-            renderItem={({ item }) => (
-              <BuildCard
-                cardItem={item}
-                regenarate={regenarateLink}
-                regenLoading={regenLoading}
-              />
-            )}
-            refreshing={isFetching}
-            onRefresh={refetch}
-          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.select({ ios: 50, android: 500 })}
+            style={styles.flex}
+          >
+            <CustomFlatlist
+              data={filteredApps ?? []}
+              contentContainerStyle={styles.flatlistContainer}
+              keyExtractor={item => item.id}
+              ListEmptyComponent={
+                !isLoading ? (
+                  <View style={styles.emptyView}>
+                    <CustomText>{'No Data Available'}</CustomText>
+                  </View>
+                ) : (
+                  <></>
+                )
+              }
+              renderItem={({ item }) => (
+                <BuildCard
+                  cardItem={item}
+                  regenarate={regenarateLink}
+                  regenLoading={regenLoading}
+                />
+              )}
+              refreshing={isFetching}
+              onRefresh={refetch}
+            />
+          </KeyboardAvoidingView>
         </View>
       </View>
     </SafeScreen>
@@ -178,11 +184,14 @@ const makeStyles = (theme: CustomTheme, topInset: number) =>
     },
     flex: {
       flex: 1,
+    },
+    subContainer: {
+      flex: 1,
       paddingTop: 75,
     },
     segmentedBtn: {
       marginHorizontal: 16,
-      backgroundColor: theme.colors.primaryContainer,
+      backgroundColor: `${theme.colors.primaryContainer}3d`,
     },
     emptyView: {
       flex: 1,
