@@ -187,6 +187,7 @@ const makeStyles = (theme: CustomTheme, topInset: number) =>
     },
     flatlistContainer: {
       paddingTop: 0,
+      paddingBottom: 30,
     },
     flex: {
       flex: 1,
