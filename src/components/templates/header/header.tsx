@@ -116,7 +116,7 @@ const Header = ({ ...props }: HeaderProps) => {
             />
           </Tap>
 
-          <CustomText>{props.title}</CustomText>
+          <CustomText allowFontScaling={false}>{props.title}</CustomText>
 
           <Tap onPress={toggleToolbar}>
             <CustomImage

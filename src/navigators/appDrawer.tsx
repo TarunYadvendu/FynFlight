@@ -24,10 +24,11 @@ export const AppDrawer = () => {
         <View style={styles.bottomLayInfo}>
           <View style={styles.dot} />
           <CustomText
+            allowFontScaling={false}
             variant={TextVariants.labelMedium}
           >{`BuildVersion : 0.0.1`}</CustomText>
         </View>
-        <CustomText variant={TextVariants.labelMedium}>
+        <CustomText allowFontScaling={false} variant={TextVariants.labelMedium}>
           {`Version : 0.0.1`}
         </CustomText>
       </View>

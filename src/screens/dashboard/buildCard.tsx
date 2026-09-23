@@ -80,10 +80,7 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
                   <CustomText
                     key={index}
                     color={theme.colors.labelLight}
-                    style={{
-                      // textDecorationStyle: 'dashed',
-                      textDecorationLine: 'underline',
-                    }}
+                    style={styles.underline}
                   >
                     {`${item}${assignedUsers.length - 1 !== index ? ',' : ''}`}
                   </CustomText>
@@ -220,6 +217,7 @@ const makeStyle = (theme: CustomTheme) =>
       flex: 1,
       flexDirection: 'row',
       gap: 8,
+      flexWrap: 'wrap',
     },
     footer: {
       flex: 1,
@@ -236,6 +234,9 @@ const makeStyle = (theme: CustomTheme) =>
       flexWrap: 'wrap',
       flexDirection: 'row',
       gap: 6,
+    },
+    underline: {
+      textDecorationLine: 'underline',
     },
     ticketTap: {
       borderRadius: theme.roundness,
