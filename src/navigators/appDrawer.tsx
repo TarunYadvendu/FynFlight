@@ -2,7 +2,7 @@ import { CustomImage, CustomText } from '@/components/custom';
 import { TextVariants } from '@/components/custom/customText/customText';
 import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AppDrawer = () => {
@@ -56,7 +56,7 @@ const makeStyle = (
     bottomLay: {
       flexDirection: 'row',
       paddingTop: 20,
-      paddingBottom: insets.bottom,
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom : 30,
       borderTopWidth: 0.5,
       borderColor: theme.colors.border,
       paddingHorizontal: 10,

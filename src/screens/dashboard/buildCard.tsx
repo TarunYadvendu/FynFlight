@@ -5,8 +5,13 @@ import { TextVariants } from '@/components/custom/customText/customText';
 import { MobileAppsModel } from '@/services/models';
 import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
-import { assignedNameExtracter, ticketNumberExtracter } from '@/utils/utils';
-import { Linking, StyleSheet, View } from 'react-native';
+import {
+  assignedNameExtracter,
+  formatDate,
+  openLink,
+  ticketNumberExtracter,
+} from '@/utils/utils';
+import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
 type BuildCardProps = {
@@ -25,7 +30,7 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
   /** handling regenrate and iunstallation */
   const handlePress = async () => {
     if (cardItem.linkAvailable) {
-      await Linking.openURL(cardItem.link);
+      await openLink(cardItem.link);
     } else {
       props.regenarate(cardItem.id);
     }
@@ -36,6 +41,12 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
 
   /** assigned contacts */
   const assignedUsers = assignedNameExtracter(cardItem.assignTo);
+
+  /**date format */
+  const formattedDate = formatDate({
+    date: cardItem.createdAt,
+    returnFormat: 'MMM DD',
+  });
 
   return (
     <Shadow style={styles.container}>
@@ -92,6 +103,8 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
           <CustomText>{`Version ${cardItem.version || '-'}`}</CustomText>
           <CustomText color={theme.colors.labelLight}>{`•`}</CustomText>
           <CustomText>{`Build ${cardItem.buildVersion || '-'}`}</CustomText>
+          <CustomText color={theme.colors.labelLight}>{`•`}</CustomText>
+          <CustomText>{formattedDate}</CustomText>
         </View>
         <CustomText
           variant={TextVariants.titleSmall}
@@ -110,8 +123,8 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
               {extractedTickets.map(item => {
                 return (
                   <Tap
-                    onClick={() => {
-                      Linking.openURL(item.link);
+                    onPress={async () => {
+                      openLink(item.link);
                     }}
                     containerStyle={styles.ticketTap}
                     style={styles.ticketChipContainer}
@@ -206,7 +219,7 @@ const makeStyle = (theme: CustomTheme) =>
     versions: {
       flex: 1,
       flexDirection: 'row',
-      gap: 15,
+      gap: 8,
     },
     footer: {
       flex: 1,

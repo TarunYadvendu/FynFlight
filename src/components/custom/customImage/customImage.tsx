@@ -2,7 +2,13 @@ import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
 import FastImage, { ImageStyle } from '@d11/react-native-fast-image';
 import React, { memo, useState } from 'react';
-import { ActivityIndicator, StyleProp, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  AssetRegistry,
+  StyleProp,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SvgProps, SvgUri } from 'react-native-svg';
 import { LocalSvg } from 'react-native-svg/css';
 
@@ -45,7 +51,14 @@ function CustomImage({
   const isUri = (source: any): source is { uri: string } =>
     typeof source === 'object' && source !== null && 'uri' in source;
 
-  const isSvg = type === ImageType.svg;
+  // Local require('x.svg') assets are detected from Metro's asset registry,
+  // so callers don't have to pass `type={ImageType.svg}`. Without this they
+  // fall through to FastImage, which ignores tintColor for SVGs on Android.
+  const isLocalSvg =
+    typeof props.source === 'number' &&
+    AssetRegistry.getAssetByID(props.source)?.type === 'svg';
+
+  const isSvg = type === ImageType.svg || isLocalSvg;
 
   //checking if the image is remote or local
   const isRemote = isUri(props.source);

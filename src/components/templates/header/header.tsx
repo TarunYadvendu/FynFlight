@@ -9,7 +9,7 @@ import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
 import { useAppNavigation } from '@/utils/navigation/navigationUtils';
 import { DrawerActions } from '@react-navigation/native';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import Animated, {
   interpolate,
@@ -38,15 +38,21 @@ const Header = ({ ...props }: HeaderProps) => {
 
   //shared value for diff speed animation
   const normalProgress = useSharedValue(1);
-  const editorProgress = useSharedValue(0);
+  const searchProgress = useSharedValue(0);
+
+  // Android still delivers touches to views at opacity 0 (iOS doesn't), so
+  // only the visible layer may receive them — otherwise the hidden search
+  // input sits on top and swallows taps meant for the search icon.
+  const [isSearching, setIsSearching] = useState(false);
 
   //animatiopn trigger
   const toggleToolbar = () => {
-    if (normalProgress.value === 1) {
+    if (!isSearching) {
+      setIsSearching(true);
       normalProgress.value = withTiming(0, {
         duration: 100,
       });
-      editorProgress.value = withTiming(1, {
+      searchProgress.value = withTiming(1, {
         duration: 350,
       });
       // Focus after the search input becomes visible
@@ -54,7 +60,8 @@ const Header = ({ ...props }: HeaderProps) => {
         searchInputRef.current?.focus();
       }, 250);
     } else {
-      editorProgress.value = withTiming(0, {
+      setIsSearching(false);
+      searchProgress.value = withTiming(0, {
         duration: 100,
       });
       normalProgress.value = withTiming(1, {
@@ -70,10 +77,10 @@ const Header = ({ ...props }: HeaderProps) => {
     return {
       transform: [
         {
-          translateX: interpolate(editorProgress.value, [0, 1], [40, 0]),
+          translateX: interpolate(searchProgress.value, [0, 1], [40, 0]),
         },
       ],
-      opacity: interpolate(editorProgress.value, [0, 1], [0, 1]),
+      opacity: interpolate(searchProgress.value, [0, 1], [0, 1]),
     };
   });
 
@@ -92,7 +99,10 @@ const Header = ({ ...props }: HeaderProps) => {
   return (
     <GlassView style={styles.container}>
       <View style={styles.subContainer}>
-        <Animated.View style={[styles.mainContent, normalHeaderStyle]}>
+        <Animated.View
+          style={[styles.mainContent, normalHeaderStyle]}
+          pointerEvents={isSearching ? 'none' : 'auto'}
+        >
           <Tap
             onPress={() => {
               Keyboard.dismiss();
@@ -117,7 +127,10 @@ const Header = ({ ...props }: HeaderProps) => {
           </Tap>
         </Animated.View>
 
-        <Animated.View style={[styles.textInputContent, searchAnimatedStyle]}>
+        <Animated.View
+          style={[styles.textInputContent, searchAnimatedStyle]}
+          pointerEvents={isSearching ? 'auto' : 'none'}
+        >
           <CustomTextInput
             ref={searchInputRef}
             style={styles.flex}
@@ -125,7 +138,7 @@ const Header = ({ ...props }: HeaderProps) => {
             value={props.search}
             suffixIcon={{
               source: Images.close,
-              tap: toggleToolbar,
+              tap: () => props.setSearch && props.setSearch(''),
             }}
             prefixIcon={{
               source: Images.back,
@@ -161,6 +174,7 @@ const makeStyle = (theme: CustomTheme) =>
       padding: 5,
       margin: 10,
       zIndex: 10,
+      overflow: 'hidden',
     },
     subContainer: {
       paddingVertical: 22,
