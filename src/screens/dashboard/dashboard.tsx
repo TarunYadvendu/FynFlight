@@ -25,7 +25,7 @@ export const Dashboard = () => {
   const insets = useSafeAreaInsets();
 
   /** Added by @Yuvraj 21-06-2026 -> access StylesSheet with theme implemented */
-  const styles = makeStyles(theme, insets.top);
+  const styles = makeStyles(theme);
 
   /** search  */
   const [search, setSearch] = useState('');
@@ -94,7 +94,7 @@ export const Dashboard = () => {
     onSettled() {
       setRegenLoading(undefined);
     },
-    onSuccess(data, variables) {
+    onSuccess(dataRegen, variables) {
       //can i update the data here so not each item will re render and the user will be there only where they were?
       queryClient.setQueryData<MobileAppsModel[]>(
         ['mobileAppBuils'],
@@ -102,12 +102,12 @@ export const Dashboard = () => {
           if (!currentData) return currentData;
 
           return currentData.map(item =>
-            item.id === variables.id ? data : item,
+            item.id === variables.id ? dataRegen : item,
           );
         },
       );
     },
-    onError(error, variables, context) {
+    onError(error) {
       showSnackbar(error.message, 'danger');
     },
   });
@@ -179,7 +179,7 @@ export const Dashboard = () => {
   );
 };
 
-const makeStyles = (theme: CustomTheme, topInset: number) =>
+const makeStyles = (theme: CustomTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
