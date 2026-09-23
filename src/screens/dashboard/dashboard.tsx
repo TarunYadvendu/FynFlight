@@ -139,8 +139,14 @@ export const Dashboard = () => {
             textVariant={TextVariants.labelLarge}
           />
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.select({ ios: 50, android: 500 })}
+            // edge-to-edge (targetSdk 35+) disables adjustResize on Android,
+            // so the list must be padded here on both platforms
+            behavior="padding"
+            // offset = distance from the screen top to this view's parent
+            keyboardVerticalOffset={Platform.select({
+              ios: 50,
+              android: insets.top,
+            })}
             style={styles.flex}
           >
             <CustomFlatlist
