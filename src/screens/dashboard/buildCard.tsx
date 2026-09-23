@@ -56,7 +56,7 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
             styles.logoContainer,
             {
               backgroundColor: cardItem.isIos
-                ? theme.colors.iosBurg
+                ? theme.colors.iosBg
                 : theme.colors.androidBg,
             },
           ]}
