@@ -80,15 +80,9 @@ export const assignedNameExtracter = (allNames: string) => {
 // ======================= link opening handling - START =============================
 export const openLink = async (url: string) => {
   try {
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      showSnackbar('Invalid or unavailable link', 'danger');
-    }
+    await Linking.openURL(url);
   } catch (error) {
-    showSnackbar('Invalid or unavailable link', 'danger');
+    showSnackbar(`Invalid or unavailable link : ${error}`, 'danger');
   }
 };
 // ======================= link opening handling - END =============================
