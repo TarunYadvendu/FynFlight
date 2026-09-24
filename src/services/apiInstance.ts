@@ -47,8 +47,11 @@ apiClient.interceptors.response.use(
   error => {
     console.log(`❌ ${error.response?.status} ${error.config?.url}`);
 
-    const message =
-      error.response?.data?.message ?? error.message ?? 'Something went wrong';
+    const message = !error.response
+      ? 'Unable to reach server. Check your internet connection.'
+      : error.response?.data?.message ??
+        error.message ??
+        'Something went wrong';
 
     return Promise.reject(new Error(message));
   },

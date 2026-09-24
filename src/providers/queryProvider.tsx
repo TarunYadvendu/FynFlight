@@ -1,5 +1,16 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import NetInfo from '@react-native-community/netinfo';
+import {
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import React from 'react';
+
+onlineManager.setEventListener(setOnline => {
+  return NetInfo.addEventListener(state => {
+    setOnline(!!state.isConnected && state.isInternetReachable !== false);
+  });
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {

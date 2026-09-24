@@ -5,7 +5,9 @@
  * @format
  */
 
-import { StatusBar, useColorScheme } from 'react-native';
+import { focusManager } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { AppState, StatusBar, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { createMMKV } from 'react-native-mmkv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -32,6 +34,13 @@ export const zustandStorage: StateStorage = {
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', status => {
+      focusManager.setFocused(status === 'active');
+    });
+    return () => sub.remove();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
