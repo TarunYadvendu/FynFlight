@@ -53,7 +53,7 @@ export function showSnackbar(
 export const ticketNumberExtracter = (allTickets: string) => {
   const arrayOfTickets = allTickets.split(',');
 
-  return arrayOfTickets.map((item, index) => {
+  return arrayOfTickets.map(item => {
     let seprator = item.split('/');
     return { text: seprator[seprator.length - 1], link: item };
   });
