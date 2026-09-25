@@ -45,7 +45,7 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
   /**date format */
   const formattedDate = formatDate({
     date: cardItem.createdAt,
-    returnFormat: 'MMM DD',
+    returnFormat: 'DD MMM,YYYY',
   });
 
   return (
@@ -97,11 +97,23 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
 
       <View style={styles.contentContainer}>
         <View style={styles.versions}>
-          <CustomText>{`Version ${cardItem.version || '-'}`}</CustomText>
-          <CustomText color={theme.colors.labelLight}>{`•`}</CustomText>
-          <CustomText>{`Build ${cardItem.buildVersion || '-'}`}</CustomText>
-          <CustomText color={theme.colors.labelLight}>{`•`}</CustomText>
-          <CustomText>{formattedDate}</CustomText>
+          <CustomText variant={TextVariants.titleSmall}>{`Version ${
+            cardItem.version || '-'
+          }`}</CustomText>
+          <CustomText
+            variant={TextVariants.titleSmall}
+            color={theme.colors.labelLight}
+          >{`•`}</CustomText>
+          <CustomText variant={TextVariants.titleSmall}>{`Build ${
+            cardItem.buildVersion || '-'
+          }`}</CustomText>
+          <CustomText
+            variant={TextVariants.titleSmall}
+            color={theme.colors.labelLight}
+          >{`•`}</CustomText>
+          <CustomText variant={TextVariants.titleSmall}>
+            {formattedDate}
+          </CustomText>
         </View>
         <CustomText
           variant={TextVariants.titleSmall}
