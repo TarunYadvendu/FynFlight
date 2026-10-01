@@ -1,4 +1,3 @@
-import { Images } from '@/theme/assets/images';
 import { CustomTheme, useTheme } from '@/theme/themeProvider/paperTheme';
 import FastImage, { ImageStyle } from '@d11/react-native-fast-image';
 import React, { memo, useState } from 'react';
@@ -35,7 +34,7 @@ export type CustomImageProps = {
 };
 
 function CustomImage({
-  errorSource = Images.errorImage,
+  // errorSource = Images.errorImage,
   type = ImageType.png,
   ...props
 }: CustomImageProps) {
@@ -160,6 +159,9 @@ function CustomImage({
 
 const makeStyles = (theme: CustomTheme) =>
   StyleSheet.create({
+    main: {
+      backgroundColor: theme.roundness,
+    },
     loader: {
       position: 'absolute',
       top: 0,

@@ -152,7 +152,7 @@ export const Dashboard = () => {
             <CustomFlatlist
               data={filteredApps ?? []}
               contentContainerStyle={styles.flatlistContainer}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               ListEmptyComponent={
                 !isLoading ? (
                   <View style={styles.emptyView}>
@@ -162,8 +162,9 @@ export const Dashboard = () => {
                   <></>
                 )
               }
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <BuildCard
+                  key={index}
                   cardItem={item}
                   regenarate={regenarateLink}
                   regenLoading={regenLoading}

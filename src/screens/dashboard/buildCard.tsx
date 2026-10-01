@@ -129,9 +129,10 @@ export const BuildCard = ({ cardItem, ...props }: BuildCardProps) => {
         <View style={styles.footerInfo}>
           {cardItem.ticketNumber ? (
             <View style={styles.ticketContainer}>
-              {extractedTickets.map(item => {
+              {extractedTickets.map((item, index) => {
                 return (
                   <Tap
+                    key={index}
                     onPress={async () => {
                       openLink(item.link);
                     }}

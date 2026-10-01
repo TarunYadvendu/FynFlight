@@ -86,7 +86,7 @@ function CustomSegmentedButton({
     <Shadow inset style={[styles.buttonContainer, props.style]}>
       {props.items?.map((item, index) => (
         <Tap
-          key={`segmented${item.value}`}
+          key={`segmented${item.value}-${index}`}
           containerStyle={[
             styles.tapArea,
             item.disabled ? styles.disabledTapArea : undefined,
